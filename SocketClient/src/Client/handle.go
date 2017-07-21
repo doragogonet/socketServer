@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"net"
 	"time"
+
+	"github.com/Jordanzuo/goutil/debugUtil"
+	"github.com/Jordanzuo/goutil/logUtil"
 )
 
 var (
@@ -18,11 +21,11 @@ func handleSendData(conn net.Conn) {
 
 		n, err := conn.Write([]byte(testString))
 		if err != nil {
-			fmt.Println("send err :" + err.Error())
+			logUtil.Log(fmt.Sprintf("发送数据出错:%s", err.Error()), logUtil.Error, true)
 			return
 		}
 
-		fmt.Println(fmt.Sprintf("send data len:%d", n))
+		debugUtil.Println(fmt.Sprintf("send data len:%d", n))
 
 		// 测试通信,每秒发送一次
 		time.Sleep(time.Second * 1)
@@ -35,10 +38,11 @@ func handleRecData(conn net.Conn) {
 		recData := make([]byte, 1024)
 		n, err := conn.Read(recData)
 		if err != nil {
-			fmt.Println("read err:" + err.Error())
+			logUtil.Log(fmt.Sprintf("读取数据出错:%s", err.Error()), logUtil.Error, true)
+			break
 		}
 
 		message := string(recData[:n])
-		fmt.Println(fmt.Sprintf("收到来自%s的消息:%s", conn.RemoteAddr().String(), message))
+		debugUtil.Println(fmt.Sprintf("收到来自%s的消息:%s", conn.RemoteAddr().String(), message))
 	}
 }

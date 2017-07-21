@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"net"
 	"sync"
+
+	"github.com/Jordanzuo/goutil/debugUtil"
+	"github.com/Jordanzuo/goutil/logUtil"
 )
 
 //Start SocketServer启动入口
 func Start(wg *sync.WaitGroup, socketServerAddress string) {
-	fmt.Println("SocketServer Start")
+	debugUtil.Println("SocketServer Start")
 
 	defer func() {
 		wg.Done()
@@ -16,17 +19,17 @@ func Start(wg *sync.WaitGroup, socketServerAddress string) {
 
 	listener, err := net.Listen("tcp", socketServerAddress)
 	if err != nil {
-		fmt.Println("listen err : " + err.Error())
+		logUtil.Log(fmt.Sprintf("监听客户端出错:%s", err.Error()), logUtil.Error, true)
 		return
 	}
 
-	fmt.Println(fmt.Sprintf("SocketServer Start, listen %s", listener.Addr()))
+	debugUtil.Println(fmt.Sprintf("SocketServer Start, listen %s", listener.Addr()))
 
 	for {
 		// 阻塞直到新连接到来
 		conn, err := listener.Accept()
 		if err != nil {
-			fmt.Println("accept error : " + err.Error())
+			logUtil.Log(fmt.Sprintf("接收数据出错:%s", err.Error()), logUtil.Error, true)
 			return
 		}
 

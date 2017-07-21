@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"net"
 	"time"
+
+	"github.com/Jordanzuo/goutil/debugUtil"
+	"github.com/Jordanzuo/goutil/logUtil"
 )
 
 // 处理客户端连接
@@ -24,7 +27,7 @@ func handleReadData(conn net.Conn) {
 		// Read方法会阻塞直到收到数据
 		n, err := conn.Read(readBytes)
 		if err != nil {
-			fmt.Println("read err :" + err.Error())
+			logUtil.Log(fmt.Sprintf("读取客户端数据出错:%s", err.Error()), logUtil.Error, true)
 			return
 		}
 
@@ -47,7 +50,7 @@ func handleRecData(client *clientObj) {
 	// 截取数据,得到新的数据
 	client.recData = client.recData[n:]
 
-	fmt.Println(fmt.Sprintf("收到来自id=%d的客户端的消息:%s", client.id, message))
+	debugUtil.Println(fmt.Sprintf("收到来自id=%d的客户端的消息:%s", client.id, message))
 }
 
 // 处理客户端发送的数据
@@ -64,10 +67,10 @@ func handleSendData(client *clientObj) {
 		// 发送数据
 		n, err := client.conn.Write(message.data)
 		if err != nil {
-			fmt.Println("本次发送数据错误,err:" + err.Error())
+			logUtil.Log(fmt.Sprintf("本次发送数据错误:%s", err.Error()), logUtil.Error, true)
 			continue
 		}
 
-		fmt.Println(fmt.Sprintf("本次发送给id=%d的客户端长度为%d的数据",client.id, n))
+		debugUtil.Println(fmt.Sprintf("本次发送给id=%d的客户端长度为%d的数据", client.id, n))
 	}
 }

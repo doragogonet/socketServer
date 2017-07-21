@@ -1,18 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"sync"
 
-	"wshhz.com/Socket/SocketServer/SocketClient/Client"
+	"wshhz.com/Socket/SocketServer/SocketClient/config"
+	"wshhz.com/Socket/SocketServer/SocketClient/src/Client"
+	"wshhz.com/Socket/SocketServer/SocketClient/src/signalMgr"
 )
 
 var (
 	wg sync.WaitGroup
-)
-
-const (
-	socketServerAddress = "10.254.0.129:8090"
 )
 
 func init() {
@@ -20,9 +17,10 @@ func init() {
 }
 
 func main() {
-	Client.Start(&wg, socketServerAddress)
+	signalMgr.Start(nil, nil)
 
+	Client.Start(&wg, config.SocketServerAddress)
+
+	// 防止主线程退出
 	wg.Wait()
-
-	fmt.Println("SocketClient End...")
 }

@@ -1,19 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"sync"
 	"time"
 
-	"wshhz.com/Socket/SocketServer/SocketServer/Server"
+	"wshhz.com/Socket/SocketServer/SocketServer/config"
+	"wshhz.com/Socket/SocketServer/SocketServer/src/Server"
+	"wshhz.com/Socket/SocketServer/SocketServer/src/signalMgr"
 )
 
 var (
 	wg sync.WaitGroup
-)
-
-const (
-	socketServerAddress = "10.254.0.129:8090"
 )
 
 func init() {
@@ -21,13 +18,14 @@ func init() {
 }
 
 func main() {
-	go Server.Start(&wg, socketServerAddress)
+	signalMgr.Start(nil, nil)
+
+	go Server.Start(&wg, config.SocketServerAddress)
 
 	go testSend()
 
+	// 防止主线程退出
 	wg.Wait()
-
-	fmt.Println("SocketServer End...")
 }
 
 // 测试发送数据
