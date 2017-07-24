@@ -12,6 +12,9 @@ var (
 
 	//SocketServerAddress SocketServer监听地址
 	SocketServerAddress string
+
+	//WebServerAddress WebServer监听地址
+	WebServerAddress string
 )
 
 func init() {
@@ -36,8 +39,13 @@ func init() {
 	SocketServerAddress, err = configUtil.ReadStringJsonValue(config, "SocketServerAddress")
 	checkError(err)
 
+	// 解析WebServerAddress监听地址配置数据
+	WebServerAddress, err = configUtil.ReadStringJsonValue(config, "WebServerAddress")
+	checkError(err)
+
 	debugUtil.Println("DEBUG:", debug)
 	debugUtil.Println("SocketServerAddress", SocketServerAddress)
+	debugUtil.Println("WebServerAddress", WebServerAddress)
 }
 
 func checkError(err error) {

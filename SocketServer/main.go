@@ -7,6 +7,8 @@ import (
 	"wshhz.com/Socket/SocketServer/SocketServer/config"
 	"wshhz.com/Socket/SocketServer/SocketServer/src/Server"
 	"wshhz.com/Socket/SocketServer/SocketServer/src/signalMgr"
+
+	"wshhz.com/Socket/SocketServer/SocketServer/src/webServer"
 )
 
 var (
@@ -18,11 +20,16 @@ func init() {
 }
 
 func main() {
+	// 启动信号管理器
 	signalMgr.Start(nil, nil)
 
+	// 启动SocketServer
 	go Server.Start(&wg, config.SocketServerAddress)
 
-	go testSend()
+	// 启动WebServer
+	go webServer.Start(&wg, config.WebServerAddress)
+
+	//go testSend()
 
 	// 防止主线程退出
 	wg.Wait()
